@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechCompare - Сравнение процессоров и видеокарт</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, #00d4ff, #ff006e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #00d4ff;
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(45deg, #00d4ff, #ff006e);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            padding: 0 2rem;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, #ffffff, #00d4ff, #ff006e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.3)); }
+            to { filter: drop-shadow(0 0 30px rgba(255, 0, 110, 0.3)); }
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #00d4ff, #ff006e);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+        }
+
+        /* Content Sections */
+        .content {
+            display: none; 
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 120px 2rem 4rem; 
+        }
+
+        .content.active {
+            display: block; 
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(45deg, #00d4ff, #ff006e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+            perspective: 1000px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) rotateX(5deg);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.2);
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #00d4ff;
+        }
+
+        .spec-list {
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        .spec-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .spec-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .performance-bar {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            height: 8px;
+            margin: 0.5rem 0;
+            overflow: hidden;
+        }
+
+        .performance-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00d4ff, #ff006e);
+            border-radius: 10px;
+            transition: width 1s ease;
+        }
+
+        /* About Section Styles */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr; 
+            gap: 4rem;
+            margin-bottom: 3rem;
+            align-items: start; 
+        }
+
+        .about-text p {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+         .about-text h3 {
+            font-size: 1.8rem;
+            color: #00d4ff;
+            margin-bottom: 1.5rem;
+        }
+
+        .about-features {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #00d4ff, #ff006e);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0; 
+        }
+        .feature h4 {
+            font-size: 1.2rem;
+            margin-bottom: 0.3rem;
+            color: #ffffff;
+        }
+        .feature p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+
+        /* Participants Section Styles */
+        .participants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 400px; 
+            margin: 0 auto; 
+        }
+
+        .participant-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+        }
+
+        .participant-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(255, 0, 110, 0.2);
+        }
+
+        .participant-avatar img { 
+            width: 150px; 
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem; 
+            object-fit: cover; 
+            border: 3px solid #00d4ff; 
+        }
+        .participant-card h3 {
+            font-size: 1.8rem; 
+            margin-bottom: 0.7rem;
+            color: #00d4ff;
+        }
+        .participant-card .role { 
+            font-size: 1.1rem;
+            color: #ffffff;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+        .participant-card .contribution { 
+            font-size: 1rem;
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+
+        /* Journal Section Styles */
+        .journal-timeline {
+            position: relative;
+            padding-left: 2rem; 
+            max-width: 900px; 
+            margin: 0 auto; 
+        }
+
+        .journal-timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, #00d4ff, #ff006e);
+        }
+
+        .journal-entry {
+            position: relative;
+            margin-bottom: 3rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 1.5rem; 
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+        }
+
+        .journal-entry::before { 
+            content: '';
+            position: absolute;
+            left: -2.4rem; 
+            top: 1.5rem; 
+            width: 12px;
+            height: 12px;
+            background: #00d4ff;
+            border-radius: 50%;
+            border: 3px solid #0a0a0a; 
+            z-index: 1;
+        }
+
+        .journal-date {
+            color: #00d4ff;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        .journal-entry h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.7rem;
+            color: #ffffff;
+        }
+        .journal-entry p {
+            font-size: 1rem;
+            line-height: 1.7;
+            opacity: 0.8;
+        }
+
+        /* Resources Section Styles */
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .resource-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(0, 212, 255, 0.3);
+            box-shadow: 0 10px 20px rgba(0, 212, 255, 0.1);
+        }
+
+        .resource-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.7rem;
+            color: #00d4ff;
+        }
+        .resource-card p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+
+        .resource-card a {
+            color: #00d4ff;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block; 
+            padding: 0.5rem 1rem;
+            border: 1px solid #00d4ff;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .resource-card a:hover {
+            background-color: #00d4ff;
+            color: #0a0a0a;
+        }
+
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none; 
+            }
+            /* TODO: Добавить кнопку-бургер и логику для мобильного меню */
+
+            .about-content {
+                grid-template-columns: 1fr; 
+                gap: 2rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr; 
+            }
+            
+            .hero h1 {
+                font-size: clamp(2.5rem, 10vw, 4rem); 
+            }
+            .hero p {
+                font-size: 1.1rem; 
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+             .cta-buttons .btn {
+                width: 80%; 
+                text-align: center;
+            }
+
+            .section-title {
+                font-size: 2.2rem; 
+            }
+            .journal-timeline {
+                padding-left: 1rem; 
+            }
+            .journal-entry::before {
+                left: -1.9rem; 
+            }
+            .participants-grid {
+                 max-width: 100%; 
+            }
+            .participant-avatar img {
+                width: 120px;
+                height: 120px;
+            }
+        }
+
+        /* Floating Elements Animation */
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .floating-element {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(0, 212, 255, 0.3);
+            border-radius: 50%;
+            animation: float 15s linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements" id="floatingElementsContainer"></div>
+
+    <nav>
+        <div class="nav-container">
+            <div class="logo">TechCompare</div>
+            <ul class="nav-links">
+                <li><a href="#" onclick="showSection('home', this)" class="active">Главная</a></li>
+                <li><a href="#" onclick="showSection('about', this)">О проекте</a></li>
+                <li><a href="#" onclick="showSection('participants', this)">Участники</a></li>
+                <li><a href="#" onclick="showSection('journal', this)">Журнал</a></li>
+                <li><a href="#" onclick="showSection('resources', this)">Ресурсы</a></li>
+                </ul>
+            </div>
+    </nav>
+
+    <section id="home" class="content active">
+        <div class="hero">
+            <div class="hero-content">
+                <h1>TechCompare</h1>
+                <p>Ваш гид в мире компьютерных комплектующих. Сравнения, обзоры и актуальная информация.</p>
+                <div class="cta-buttons">
+                    <a href="#" onclick="showSection('processorsPage', this); return false;" class="btn btn-primary">Сравнить процессоры</a>
+                    <a href="#" onclick="showSection('graphicsPage', this); return false;" class="btn btn-secondary">Видеокарты</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="content">
+        <h2 class="section-title">О проекте «ТехноСравнение»</h2>
+        <div class="about-content">
+            <div class="about-text">
+                <h3>Описание и Цели</h3>
+                <p>Веб-сайт «ТехноСравнение» — это учебный проект, созданный в рамках дисциплины «Проектная деятельность». Наша главная задача — разработать информационный ресурс, который поможет пользователям ориентироваться в мире современных компьютерных комплектующих, таких как процессоры (CPU) и видеокарты (GPU).</p>
+                <p>Мы стремимся предоставить понятные сравнения, актуальные данные и обзоры, чтобы облегчить выбор компонентов для ПК. Хотя в рамках статического сайта данные собираются и обновляются вручную, мы стараемся поддерживать их релевантность.</p>
+                <p>Проект также включает обязательные разделы: описание самого проекта, информацию об участниках, журнал разработки и полезные ресурсы.</p>
+            </div>
+            <div class="about-features">
+                <div class="feature">
+                    <div class="feature-icon">🖥️</div>
+                    <div>
+                        <h4>Актуальные Данные</h4>
+                        <p>Информация о новейших процессорах и видеокартах.</p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📊</div>
+                    <div>
+                        <h4>Наглядные Сравнения</h4>
+                        <p>Таблицы и списки для удобного сопоставления характеристик.</p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🎓</div>
+                    <div>
+                        <h4>Учебный Проект</h4>
+                        <p>Реализация требований дисциплины «Проектная деятельность».</p>
+                    </div>
+                </div>
+                 <div class="feature">
+                    <div class="feature-icon">💡</div>
+                    <div>
+                        <h4>Полезные Ресурсы</h4>
+                        <p>Ссылки на авторитетные источники и материалы.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="participants" class="content">
+        <h2 class="section-title">Участник проекта</h2>
+        <div class="participants-grid">
+            <div class="participant-card">
+                <div class="participant-avatar">
+                    <img src="images/1657437002039.jpeg" alt="Фото участника проекта" 
+                         onerror="this.onerror=null; this.src='https://i.postimg.cc/jj7t4MyN/5348346092095402024.jpg';">
+                </div>
+                <h3>Шмиши Юнес</h3> <p class="role">Главный разработчик и автор проекта</p>
+                <p class="contribution">Отвечал(а) за концепцию, дизайн, верстку всех страниц сайта, сбор и структурирование информации, а также за финальную подготовку проекта к сдаче.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="journal" class="content">
+        <h2 class="section-title">Журнал Работы</h2>
+        <div class="journal-timeline">
+            <div class="journal-entry">
+                <div class="journal-date">Неделя 1: Май 1-7, 2025</div>
+                <h3>Старт проекта и планирование</h3>
+                <p>Определение основной идеи сайта – сравнение комплектующих. Анализ требований проектной деятельности. Выбор технологического стека (HTML, CSS, JS). Начальный дизайн макетов.</p>
+            </div>
+            <div class="journal-entry">
+                <div class="journal-date">Неделя 2: Май 8-14, 2025</div>
+                <h3>Разработка главной страницы и навигации</h3>
+                <p>Верстка главной страницы с использованием современных техник CSS. Реализация адаптивной навигации. Начало сбора контента для разделов "О проекте" и "Участники".</p>
+            </div>
+            <div class="journal-entry">
+                <div class="journal-date">Неделя 3: Май 15-21, 2025</div>
+                <h3>Создание контентных секций</h3>
+                <p>Наполнение секций для процессоров и видеокарт (примеры). Разработка структуры для страниц "Журнал" и "Ресурсы". Тестирование отображения на различных устройствах.</p>
+            </div>
+             <div class="journal-entry">
+                <div class="journal-date">Неделя 4: Май 22-28, 2025</div>
+                <h3>Финальные штрихи и подготовка к сдаче</h3>
+                <p>Доработка стилей, проверка контента на уникальность и соответствие требованиям. Подготовка описания проекта и отчета. Размещение на хостинге (например, GitHub Pages).</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="resources" class="content">
+        <h2 class="section-title">Полезные Ресурсы</h2>
+        <div class="resources-grid">
+            <div class="resource-card">
+                <h3>Документация HTML5</h3>
+                <p>Официальная спецификация и руководства по HTML.</p>
+                <a href="https://developer.mozilla.org/ru/docs/Web/HTML" target="_blank" rel="noopener noreferrer">Перейти на MDN</a>
+            </div>
+            <div class="resource-card">
+                <h3>Документация CSS3</h3>
+                <p>Справочник по свойствам CSS и техникам стилизации.</p>
+                <a href="https://developer.mozilla.org/ru/docs/Web/CSS" target="_blank" rel="noopener noreferrer">Перейти на MDN</a>
+            </div>
+            <div class="resource-card">
+                <h3>Руководство по JavaScript</h3>
+                <p>Основы и продвинутые концепции JavaScript.</p>
+                <a href="https://learn.javascript.ru/" target="_blank" rel="noopener noreferrer">Современный учебник JS</a>
+            </div>
+            <div class="resource-card">
+                <h3>Генератор Hugo (если используется)</h3>
+                <p>Официальная документация по Hugo Static Site Generator.</p>
+                <a href="https://gohugo.io/documentation/" target="_blank" rel="noopener noreferrer">Документация Hugo</a>
+            </div>
+            <div class="resource-card">
+                <h3>TechPowerUp</h3>
+                <p>База данных и обзоры видеокарт и другого оборудования.</p>
+                <a href="https://www.techpowerup.com/" target="_blank" rel="noopener noreferrer">Посетить сайт</a>
+            </div>
+            <div class="resource-card">
+                <h3>AnandTech</h3>
+                <p>Глубокие обзоры и анализ компьютерных комплектующих.</p>
+                <a href="https://www.anandtech.com/" target="_blank" rel="noopener noreferrer">Посетить сайт</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="processorsPage" class="content">
+        <h2 class="section-title">Современные процессоры</h2>
+        <div class="cards-grid">
+            <div class="card">
+                <h3>Intel Core i9-14900K</h3>
+                <ul class="spec-list">
+                    <li><span>Ядра/Потоки:</span> <span>24/32</span></li>
+                    <li><span>Базовая частота:</span> <span>3.2 ГГц</span></li>
+                    <li><span>Турбо частота:</span> <span>6.0 ГГц</span></li>
+                    <li><span>Кэш L3:</span> <span>36 МБ</span></li>
+                    <li><span>TDP:</span> <span>125 Вт</span></li>
+                </ul>
+                <div class="performance-bar"><div class="performance-fill" style="width: 95%;"></div></div>
+                <p>Производительность: 95/100</p>
+            </div>
+            <div class="card">
+                <h3>AMD Ryzen 9 7950X</h3>
+                <ul class="spec-list">
+                    <li><span>Ядра/Потоки:</span> <span>16/32</span></li>
+                    <li><span>Базовая частота:</span> <span>4.5 ГГц</span></li>
+                    <li><span>Турбо частота:</span> <span>5.7 ГГц</span></li>
+                    <li><span>Кэш L3:</span> <span>64 МБ</span></li>
+                    <li><span>TDP:</span> <span>170 Вт</span></li>
+                </ul>
+                <div class="performance-bar"><div class="performance-fill" style="width: 92%;"></div></div>
+                <p>Производительность: 92/100</p>
+            </div>
+            <div class="card">
+                <h3>Intel Core i7-14700K</h3>
+                <ul class="spec-list">
+                    <li><span>Ядра/Потоки:</span> <span>20/28</span></li>
+                    <li><span>Базовая частота:</span> <span>3.4 ГГц</span></li>
+                    <li><span>Турбо частота:</span> <span>5.6 ГГц</span></li>
+                    <li><span>Кэш L3:</span> <span>33 МБ</span></li>
+                    <li><span>TDP:</span> <span>125 Вт</span></li>
+                </ul>
+                <div class="performance-bar"><div class="performance-fill" style="width: 88%;"></div></div>
+                <p>Производительность: 88/100</p>
+            </div>
+             <div class="card">
+                <h3>AMD Ryzen 7 7800X3D</h3>
+                <ul class="spec-list">
+                    <li><span>Ядра/Потоки:</span> <span>8/16</span></li>
+                    <li><span>Базовая частота:</span> <span>4.2 ГГц</span></li>
+                    <li><span>Турбо частота:</span> <span>5.0 ГГц</span></li>
+                    <li><span>Кэш L3:</span> <span>96 МБ (3D V-Cache)</span></li>
+                    <li><span>TDP:</span> <span>120 Вт</span></li>
+                </ul>
+                <div class="performance-bar"><div class="performance-fill" style="width: 90%;"></div></div>
+                <p>Игровая производительность: 90/100</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="graphicsPage" class="content">
+        <h2 class="section-title">Мощные видеокарты</h2>
+        <div class="cards-grid">
+            <div class="card">
+                <h3>NVIDIA GeForce RTX 4090</h3>
+                <ul class="spec-list">
+                    <li><span>CUDA-ядра:</span> <span>16384</span></li>
+                    <li><span>Частота Boost:</span> <span>2.52 ГГц</span></li>
+                    <li><span>Память:</span> <span>24 ГБ GDDR6X</span></li>
+                    <li><span>Энергопотребление:</span> <span>450 Вт</span></li>
+                </ul>
+                <div class="performance-bar"><div class="performance-fill" style="width: 100%;"></div></div>
+                <p>Производительность: 100/100</p>
+            </div>
+            <div class="card">
+                <h3>AMD Radeon RX 7900 XTX</h3>
+                <ul class="spec-list">
+                    <li><span>Потоковые процессоры:</span> <span>6144</span></li>
+                    <li><span>Частота Boost:</span> <span>2.5 ГГц</span></li>
+                    <li><span>Память:</span> <span>24 ГБ GDDR6</span></li>
+                    <li><span>Энергопотребление:</span> <span>355 Вт</span></li>
+                </ul>
+                <div class="performance-bar"><div class="performance-fill" style="width: 85%;"></div></div>
+                <p>Производительность: 85/100</p>
+            </div>
+            <div class="card">
+                <h3>NVIDIA GeForce RTX 4080 SUPER</h3>
+                <ul class="spec-list">
+                    <li><span>CUDA-ядра:</span> <span>10240</span></li>
+                    <li><span>Частота Boost:</span> <span>2.55 ГГц</span></li>
+                    <li><span>Память:</span> <span>16 ГБ GDDR6X</span></li>
+                    <li><span>Энергопотребление:</span> <span>320 Вт</span></li>
+                </ul>
+                <div class="performance-bar"><div class="performance-fill" style="width: 82%;"></div></div>
+                <p>Производительность: 82/100</p>
+            </div>
+            <div class="card">
+                <h3>AMD Radeon RX 7900 GRE</h3>
+                <ul class="spec-list">
+                    <li><span>Потоковые процессоры:</span> <span>5120</span></li>
+                    <li><span>Частота Boost:</span> <span>2.24 ГГц</span></li>
+                    <li><span>Память:</span> <span>16 ГБ GDDR6</span></li>
+                    <li><span>Энергопотребление:</span> <span>260 Вт</span></li>
+                </ul>
+                <div class="performance-bar"><div class="performance-fill" style="width: 70%;"></div></div>
+                <p>Производительность: 70/100</p>
+            </div>
+        </div>
+    </section>
+    
+    <script>
+        // Функция для отображения нужной секции и управления активной ссылкой
+        function showSection(sectionId, clickedLink) {
+            // Скрываем все секции
+            document.querySelectorAll('.content').forEach(section => {
+                section.classList.remove('active');
+            });
+            // Показываем нужную секцию
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+
+            // Управляем активным состоянием ссылок в навигации
+            if (clickedLink && clickedLink.closest('.nav-links')) { 
+                 document.querySelectorAll('.nav-links a').forEach(link => {
+                    link.classList.remove('active');
+                });
+                clickedLink.classList.add('active');
+            }
+            
+            if (targetSection && sectionId !== 'home') { 
+                const navbarHeight = document.querySelector('nav').offsetHeight;
+                const sectionTop = targetSection.offsetTop - navbarHeight - 20; 
+                window.scrollTo({ top: sectionTop, behavior: 'smooth' });
+            } else if (sectionId === 'home') {
+                 window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            showSection('home', document.querySelector('.nav-links a[onclick*="\'home\'"]'));
+
+            const container = document.getElementById('floatingElementsContainer');
+            if (container) {
+                for (let i = 0; i < 30; i++) { 
+                    const el = document.createElement('div');
+                    el.classList.add('floating-element');
+                    el.style.left = `${Math.random() * 100}vw`;
+                    el.style.animationDuration = `${Math.random() * 10 + 10}s`; 
+                    el.style.animationDelay = `${Math.random() * 5}s`;
+                    el.style.width = `${Math.random() * 3 + 2}px`; 
+                    el.style.height = el.style.width;
+                    el.style.opacity = Math.random() * 0.5 + 0.2; 
+                    container.appendChild(el);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
