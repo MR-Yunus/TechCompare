@@ -1,0 +1,39 @@
+/* Additional CSS for AMD Radeon logo placeholder */
+.gpu-amd-placeholder {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  bottom: 80px;
+  left: 150px;
+  background: linear-gradient(135deg, #ED1C24 0%, #FF5500 100%);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-weight: bold;
+  font-size: 24px;
+  text-align: center;
+  animation: float-4 10s ease-in-out infinite;
+  box-shadow: 0 10px 30px rgba(237, 28, 36, 0.4);
+}
+
+/* Intel logo placeholder */
+.cpu-intel-placeholder {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  bottom: 60px;
+  right: 120px;
+  background: linear-gradient(135deg, #0071C5 0%, #00A1DE 100%);
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-weight: bold;
+  font-size: 28px;
+  text-align: center;
+  animation: float-2 9s ease-in-out infinite;
+  box-shadow: 0 10px 30px rgba(0, 113, 197, 0.4);
+}

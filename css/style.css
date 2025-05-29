@@ -1,0 +1,512 @@
+/* Main CSS for Tech Compare Website */
+:root {
+  --primary-color: #0a0a0a;
+  --secondary-color: #f5f5f5;
+  --accent-color: #3498db;
+  --text-color: #333;
+  --background-color: #ffffff;
+  --card-background: #f9f9f9;
+  --transition-speed: 0.3s;
+  --font-main: 'Poppins', sans-serif;
+  --font-heading: 'Montserrat', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-size: 3.5rem;
+  letter-spacing: -1px;
+}
+
+h2 {
+  font-size: 2.5rem;
+  letter-spacing: -0.5px;
+}
+
+h3 {
+  font-size: 1.75rem;
+}
+
+p {
+  margin-bottom: 1.5rem;
+}
+
+a {
+  color: var(--accent-color);
+  text-decoration: none;
+  transition: all var(--transition-speed) ease;
+}
+
+a:hover {
+  color: #2980b9;
+}
+
+/* Layout */
+.container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.section {
+  padding: 6rem 0;
+}
+
+/* Header */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  transition: all var(--transition-speed) ease;
+  padding: 1rem 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.logo span {
+  color: var(--accent-color);
+}
+
+/* Navigation */
+.nav-menu {
+  display: flex;
+  list-style: none;
+}
+
+.nav-item {
+  margin-left: 2rem;
+}
+
+.nav-link {
+  color: var(--primary-color);
+  font-weight: 500;
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--accent-color);
+  transition: width var(--transition-speed) ease;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+.nav-link.active {
+  color: var(--accent-color);
+}
+
+.nav-link.active::after {
+  width: 100%;
+}
+
+/* Mobile Navigation */
+.hamburger {
+  display: none;
+  cursor: pointer;
+}
+
+.bar {
+  display: block;
+  width: 25px;
+  height: 3px;
+  margin: 5px auto;
+  transition: all var(--transition-speed) ease;
+  background-color: var(--primary-color);
+}
+
+/* Hero Section */
+.hero {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-content {
+  max-width: 800px;
+  z-index: 1;
+}
+
+.hero-title {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+}
+
+.hero-description {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+  max-width: 600px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.8rem 2rem;
+  background-color: var(--accent-color);
+  color: white;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: all var(--transition-speed) ease;
+}
+
+.btn:hover {
+  background-color: #2980b9;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.btn-outline {
+  background-color: transparent;
+  border: 2px solid var(--accent-color);
+  color: var(--accent-color);
+}
+
+.btn-outline:hover {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+/* Floating Images */
+.floating-images {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
+.floating-image {
+  position: absolute;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transform: rotate(var(--rotation));
+  transition: all 0.5s ease;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.floating-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.floating-image:hover {
+  transform: rotate(var(--rotation)) scale(1.05);
+  z-index: 10;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+.floating-image:hover img {
+  transform: scale(1.1);
+}
+
+/* Cards */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.card {
+  background-color: var(--card-background);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+  transition: all var(--transition-speed) ease;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.1);
+}
+
+.card-image {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-speed) ease;
+}
+
+.card:hover .card-image img {
+  transform: scale(1.05);
+}
+
+.card-content {
+  padding: 1.5rem;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.card-text {
+  margin-bottom: 1rem;
+}
+
+/* Comparison Tables */
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2rem 0;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.comparison-table thead {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+.comparison-table th,
+.comparison-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.comparison-table tbody tr:hover {
+  background-color: rgba(52, 152, 219, 0.05);
+}
+
+/* Footer */
+footer {
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  padding: 4rem 0 2rem;
+}
+
+.footer-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.footer-column h3 {
+  margin-bottom: 1.5rem;
+  color: white;
+}
+
+.footer-links {
+  list-style: none;
+}
+
+.footer-links li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-links a {
+  color: #ccc;
+}
+
+.footer-links a:hover {
+  color: white;
+}
+
+.footer-bottom {
+  margin-top: 3rem;
+  text-align: center;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 1s ease forwards;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  h1 {
+    font-size: 3rem;
+  }
+  
+  h2 {
+    font-size: 2rem;
+  }
+  
+  .hero-title {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    display: block;
+  }
+  
+  .hamburger.active .bar:nth-child(2) {
+    opacity: 0;
+  }
+  
+  .hamburger.active .bar:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+  
+  .hamburger.active .bar:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+  
+  .nav-menu {
+    position: fixed;
+    left: -100%;
+    top: 70px;
+    gap: 0;
+    flex-direction: column;
+    background-color: white;
+    width: 100%;
+    text-align: center;
+    transition: 0.3s;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    padding: 2rem 0;
+  }
+  
+  .nav-item {
+    margin: 1rem 0;
+  }
+  
+  .nav-menu.active {
+    left: 0;
+  }
+  
+  .hero-title {
+    font-size: 2.5rem;
+  }
+  
+  .section {
+    padding: 4rem 0;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding: 0 1rem;
+  }
+  
+  h1 {
+    font-size: 2.5rem;
+  }
+  
+  h2 {
+    font-size: 1.75rem;
+  }
+  
+  .hero-title {
+    font-size: 2rem;
+  }
+  
+  .hero-description {
+    font-size: 1rem;
+  }
+}
+
+/* Dark Mode */
+.dark-mode {
+  --primary-color: #f5f5f5;
+  --secondary-color: #0a0a0a;
+  --text-color: #f5f5f5;
+  --background-color: #121212;
+  --card-background: #1e1e1e;
+}
+
+/* RTL Support */
+.rtl {
+  direction: rtl;
+  text-align: right;
+}
+
+.rtl .nav-item {
+  margin-right: 2rem;
+  margin-left: 0;
+}
+
+.rtl .nav-link::after {
+  right: 0;
+  left: auto;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-color);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2980b9;
+}
